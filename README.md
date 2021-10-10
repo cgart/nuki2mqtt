@@ -51,7 +51,17 @@ To use the bridge together with `Nuki Doorbell` and for example `OpenHab` I use 
 You need to setup Nuki's bridge to send callbacks to this gateway. You can do so with:
 ```bash
 curl -G --data-urlencode --data-urlencode "token=<TOKEN>" --data-urlencode "url=http://<BRIDGE_IP>:5001/callback" http://<NUKI_IP>:8080/callback/add
-``` 
+```
 
+### MQTT Topics
+
+#### Regular state update
+Nuki's state is queried in 30sec interval from https://developer.nuki.io/page/nuki-bridge-http-api-1-12/4/#heading--list API endpoint. It is published at `nuki/<NUKIID>/state` for each found Nuki device. `NUKIID` is a hexadecimal string of the Nuki device.
+
+#### State change
+On any state of the device, Nuki's bridge will send a http post request to stored callback URLs. See above how to set this gateway's URL to receive callbacks from Nuki. A state is published at `nuki/<NUKIID>/update`. `NUKIID` is a hexadecimal string of the Nuki device reporting the state change.
+
+#### Lock/Unlock
+This gateway will listen on `nuki/<NUKIID>/lockAction` topic. An integer is expected which will be forwarded to https://developer.nuki.io/page/nuki-bridge-http-api-1-12/4/#heading--lockaction API endpoint. As of today `1` would unlock the lock and `2` will lock it. On successfull change an update mqtt message (see above) will be send.
 
 
