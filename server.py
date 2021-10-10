@@ -86,6 +86,20 @@ def on_mqtt_message(client, userdata, message):
         if match.group(3) == 'lockAction':
             r = requests.get(NUKI_HOST + "/lockAction", params = {"action" : message.payload, "nukiId" : nukiid, "token" : NUKI_TOKEN})
             print("nuki2mqtt: set lockAction for %s to %s -> %s" % (nukiid, str(message.payload, 'utf-8'), r.content)) 
+            
+        if match.group(3) == 'action':
+            # map actions to match those as received from state
+            action = str(message.payload, 'utf-8')
+            
+            # Lock State == 1 means LOCKED, so we would like to have lockAction as LOCK, which is 2
+            if action == '1':
+            	r = requests.get(NUKI_HOST + "/lockAction", params = {"action" : "2", "nukiId" : nukiid, "token" : NUKI_TOKEN})
+            	print("nuki2mqtt: set action for %s to %s -> %s" % (nukiid, "LOCK", r.content)) 
+
+            # Lock State == 3 means UNLOCKED, so we would like to have lockAction as UNLOCK, which is 1
+            if action == '3':
+            	r = requests.get(NUKI_HOST + "/lockAction", params = {"action" : "1", "nukiId" : nukiid, "token" : NUKI_TOKEN})
+            	print("nuki2mqtt: set action for %s to %s -> %s" % (nukiid, "UNLOCK", r.content)) 
 	        
 #
 # Anything we don't support is an error response
