@@ -45,9 +45,9 @@ Afterwards you can start the server with:
 python3 server.py
 ```
 
-### Using with Nuki Doorbell
+### Using with Nuki Smart Lock
 
-To use the bridge together with `Nuki Doorbell` and for example `OpenHab` I use the bridge to forward http callbacks to mqtt broker.
+To use the bridge together with `Nuki Smart Lock` and for example `OpenHab` I use the bridge to forward http callbacks to mqtt broker.
 You need to setup Nuki's bridge to send callbacks to this gateway. You can do so with:
 ```bash
 curl -G --data-urlencode --data-urlencode "token=<TOKEN>" --data-urlencode "url=http://<BRIDGE_IP>:5001/callback" http://<NUKI_IP>:8080/callback/add
